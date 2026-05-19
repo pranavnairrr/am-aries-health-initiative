@@ -49,16 +49,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // 4. Check cap
-  const { count } = await getSupabaseAdmin()
-    .from("registrations")
-    .select("*", { count: "exact", head: true });
-
-  if ((count ?? 0) >= 2500) {
-    return NextResponse.json({ success: false, code: "CAP_REACHED" }, { status: 409 });
-  }
-
-  // 5. Generate voucher ID via Supabase RPC
+  // 4. Generate voucher ID via Supabase RPC
   const { data: seqData, error: seqError } = await getSupabaseAdmin().rpc(
     "get_next_voucher_seq"
   );
