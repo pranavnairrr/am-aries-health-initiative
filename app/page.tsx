@@ -6,6 +6,7 @@ import RegistrationForm from "@/components/RegistrationForm";
 import EventDetails from "@/components/EventDetails";
 import Footer from "@/components/Footer";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function Page() {
   return (
@@ -20,6 +21,7 @@ export default function Page() {
         <Footer />
         <StickyMobileCTA />
       </main>
+      <WhatsAppButton />
     </>
   );
 }
