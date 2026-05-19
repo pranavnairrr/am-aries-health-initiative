@@ -16,7 +16,7 @@ const steps = [
     number: "2",
     icon: <BadgeCheck size={32} className="text-forest-green" />,
     title: "Receive",
-    desc: "Get your unique Health Credit ID (e.g. AM-0142) instantly upon registration.",
+    desc: "Get your unique Health Credit ID (e.g. AM-K7BX3MNQ) instantly upon registration.",
   },
   {
     number: "3",

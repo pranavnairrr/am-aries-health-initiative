@@ -4,6 +4,7 @@ interface VoucherCardProps {
   voucherId?: string;
   holderName?: string;
   className?: string;
+  patternId?: string;
 }
 
 /* Physical loyalty-card dimensions: ~16:9.5 aspect ratio */
@@ -11,6 +12,7 @@ export default function VoucherCard({
   voucherId,
   holderName,
   className = "",
+  patternId = "vc-geo",
 }: VoucherCardProps) {
   return (
     <div
@@ -44,7 +46,7 @@ export default function VoucherCard({
         height="100%"
       >
         <defs>
-          <pattern id="vc-geo" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
+          <pattern id={patternId} x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
             <polygon
               points="11,0 25,0 36,11 36,25 25,36 11,36 0,25 0,11"
               fill="none"
@@ -55,7 +57,7 @@ export default function VoucherCard({
             <line x1="0" y1="18" x2="36" y2="18" stroke="#C5A55A" strokeWidth="0.3" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#vc-geo)" />
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
       </svg>
 
       {/* Gold arc accent — top right */}

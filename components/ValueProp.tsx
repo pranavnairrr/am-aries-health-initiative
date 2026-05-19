@@ -57,7 +57,7 @@ export default function ValueProp() {
                 width: "100%",
               }}
             >
-              <VoucherCard />
+              <VoucherCard patternId="vc-geo-preview" />
             </div>
           </motion.div>
 
@@ -91,7 +91,7 @@ export default function ValueProp() {
             </ul>
 
             {/* 4 icon badges */}
-            <div className="grid grid-cols-4 gap-3 mt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2">
               {benefits.map((b) => (
                 <div
                   key={b.en}

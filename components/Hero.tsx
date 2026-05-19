@@ -134,11 +134,11 @@ export default function Hero() {
           variants={item}
           className="flex items-center gap-3 sm:gap-5 mb-2"
         >
-          <LeafOrnament />
+          <span className="hidden sm:block"><LeafOrnament /></span>
           <h2 className="font-cormorant font-bold text-4xl sm:text-5xl lg:text-6xl gold-gradient-text leading-none whitespace-nowrap">
             AED 2.5 MILLION
           </h2>
-          <LeafOrnament flip />
+          <span className="hidden sm:block"><LeafOrnament flip /></span>
         </motion.div>
 
         {/* Community health sub */}

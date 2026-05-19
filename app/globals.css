@@ -220,3 +220,17 @@ body {
   margin-right: auto;
   width: 100%;
 }
+
+/* ── WhatsApp button — compact on mobile, lifts above sticky CTA bar ── */
+.wa-btn {
+  bottom: 88px;
+  width: 46px !important;
+  height: 46px !important;
+}
+@media (min-width: 768px) {
+  .wa-btn {
+    bottom: 24px;
+    width: 56px !important;
+    height: 56px !important;
+  }
+}

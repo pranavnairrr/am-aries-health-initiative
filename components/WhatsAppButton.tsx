@@ -22,9 +22,9 @@ export default function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
+      className="wa-btn"
       style={{
         position: "fixed",
-        bottom: 24,
         right: 24,
         zIndex: 100,
         width: 56,
