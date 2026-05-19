@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors */
+  --color-forest-green: #1B4D3E;
+  --color-deep-evergreen: #0F3A2E;
+  --color-cream: #FDF6EC;
+  --color-cream-dark: #F5EBDB;
+  --color-gold-primary: #C5A55A;
+  --color-gold-light: #D4B96E;
+  --color-gold-dark: #A8883D;
+  --color-coral: #E8735A;
+  --color-text-dark: #1A1A1A;
+  --color-text-body: #4A4A4A;
+  --color-text-muted: #7A7A7A;
+
+  /* Fonts */
+  --font-cormorant: var(--font-cormorant-var), "Cormorant Garamond", serif;
+  --font-sans: var(--font-dm-sans), "DM Sans", sans-serif;
+  --font-arabic: var(--font-noto-arabic), "Noto Sans Arabic", sans-serif;
+
+  /* Spacing / sizing */
+  --radius-none: 0px;
+}
+
+/* ── CSS custom properties (non-Tailwind usage) ── */
+:root {
+  --gold-gradient: linear-gradient(135deg, #D4B96E 0%, #C5A55A 40%, #A8883D 100%);
+}
+
+/* ── Reset dark mode — this is a light-only brand ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FDF6EC;
+  color: #1A1A1A;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Gold gradient text ── */
+.gold-gradient-text {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ── Initiative badge — ONLY rounded element on the site ── */
+.initiative-badge {
+  display: inline-block;
+  background: #1B4D3E;
+  border: 2px solid #C5A55A;
+  border-radius: 50px;
+  color: #C5A55A;
+  padding: 10px 28px;
+  font-family: var(--font-cormorant-var), "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+/* ── CTA Button ── */
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #1B4D3E;
+  color: #FDF6EC;
+  border: 2px solid #C5A55A;
+  border-radius: 4px;
+  padding: 16px 40px;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+}
+.btn-cta:hover {
+  background: #0F3A2E;
+  box-shadow: 0 6px 24px rgba(27, 77, 62, 0.35);
+}
+.btn-cta:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.btn-cta.btn-ghost {
+  background: transparent;
+  color: #1B4D3E;
+}
+.btn-cta.btn-ghost:hover {
+  background: rgba(27, 77, 62, 0.06);
+  box-shadow: none;
+}
+
+/* ── Form input ── */
+.form-input {
+  width: 100%;
+  border: 1.5px solid #D4B96E;
+  border-radius: 6px;
+  background: #FFFFFF;
+  padding: 13px 16px;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  font-size: 0.925rem;
+  color: #1A1A1A;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.form-input:focus {
+  border-color: #1B4D3E;
+  box-shadow: 0 0 0 3px rgba(27, 77, 62, 0.1);
+}
+.form-input.input-error {
+  border-color: #E8735A;
+}
+.form-input::placeholder {
+  color: #7A7A7A;
+}
+
+/* ── Arabic RTL ── */
+.arabic-text {
+  font-family: var(--font-noto-arabic), "Noto Sans Arabic", sans-serif;
+  direction: rtl;
+  unicode-bidi: bidi-override;
+}
+
+/* ── Section padding ── */
+.section-pad {
+  padding: 72px 24px;
+}
+@media (min-width: 1024px) {
+  .section-pad {
+    padding: 112px 48px;
+  }
+}
+
+/* ── Gold line separator ── */
+.gold-line {
+  display: block;
+  height: 1px;
+  background: #C5A55A;
+  opacity: 0.4;
+}
+
+/* ── Fluid card — subtle radius + shadow for modern feel ── */
+.card-fluid {
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(27, 77, 62, 0.08), 0 1px 6px rgba(0,0,0,0.04);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.card-fluid:hover {
+  box-shadow: 0 8px 32px rgba(27, 77, 62, 0.13), 0 2px 8px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+
+/* ── Voucher card double border ── */
+.voucher-card {
+  background: #FDF6EC;
+  border: 2px solid #C5A55A;
+  outline: 1px solid #D4B96E;
+  outline-offset: -6px;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Step number badge ── */
+.step-number {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gold-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-cormorant-var), serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #0F3A2E;
+  flex-shrink: 0;
+}
+
+/* ── Event icon circle ── */
+.event-icon-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #1B4D3E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #FDF6EC;
+}
+
+/* ── Scroll reveal base ── */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* ── Max content width ── */
+.content-max {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
