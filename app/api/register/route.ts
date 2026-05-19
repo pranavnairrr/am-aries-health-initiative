@@ -49,33 +49,40 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // 4. Generate voucher ID via Supabase RPC
-  const { data: seqData, error: seqError } = await getSupabaseAdmin().rpc(
-    "get_next_voucher_seq"
-  );
-  if (seqError || seqData === null) {
-    return NextResponse.json({ success: false, code: "SEQ_ERROR" }, { status: 500 });
-  }
+  // 4. Generate unique voucher ID — retry up to 5 times on collision (astronomically rare)
+  let voucherId = "";
+  for (let attempt = 0; attempt < 5; attempt++) {
+    voucherId = generateVoucherId();
 
-  const voucherId = generateVoucherId(seqData as number);
+    const { error: insertError } = await getSupabaseAdmin()
+      .from("registrations")
+      .insert({
+        voucher_id: voucherId,
+        full_name: fullName,
+        email,
+        phone: normalizedPhone,
+        emirates_id: emiratesId || null,
+        preferred_language: preferredLanguage,
+        registered_at: new Date().toISOString(),
+      });
 
-  // 6. Insert
-  const { error: insertError } = await getSupabaseAdmin().from("registrations").insert({
-    voucher_id: voucherId,
-    full_name: fullName,
-    email,
-    phone: normalizedPhone,
-    emirates_id: emiratesId || null,
-    preferred_language: preferredLanguage,
-  });
-
-  if (insertError) {
-    // Handle race condition on unique voucher_id
-    if (insertError.code === "23505") {
-      return NextResponse.json({ success: false, code: "DUPLICATE" });
+    if (!insertError) {
+      return NextResponse.json({ success: true, voucherId });
     }
+
+    // 23505 = unique_violation — either voucher_id collision or duplicate email/phone
+    if (insertError.code === "23505") {
+      // If it's email/phone duplicate (race condition), return DUPLICATE
+      const isVoucherCollision = insertError.message?.includes("voucher_id");
+      if (!isVoucherCollision) {
+        return NextResponse.json({ success: false, code: "DUPLICATE" });
+      }
+      // Otherwise retry with a new voucher ID
+      continue;
+    }
+
     return NextResponse.json({ success: false, code: "DB_ERROR" }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true, voucherId });
+  return NextResponse.json({ success: false, code: "DB_ERROR" }, { status: 500 });
 }
