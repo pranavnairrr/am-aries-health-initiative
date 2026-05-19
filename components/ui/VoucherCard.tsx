@@ -147,28 +147,35 @@ export default function VoucherCard({
         </div>
 
         {/* Bottom row: tagline + voucher ID */}
-        <div className="flex items-end justify-between gap-2">
-          <div>
+        <div className="flex items-end justify-between gap-6">
+          {/* Left: Arabic + English taglines */}
+          <div className="flex-1 min-w-0">
             <p
-              className="arabic-text text-xs mb-0.5"
-              style={{ color: "rgba(253,246,236,0.55)" }}
+              className="arabic-text text-xs mb-1"
+              style={{ color: "rgba(253,246,236,0.6)" }}
             >
               معاً لمجتمع أكثر صحة وسعادة
             </p>
-            <p
-              className="text-[9px] uppercase tracking-[0.15em]"
-              style={{ color: "rgba(253,246,236,0.35)" }}
-            >
-              Together for a Healthier, Happier Community
-            </p>
+            {/* Only show English line when no holder name (preview mode) */}
+            {!holderName && (
+              <p
+                className="text-[9px] uppercase tracking-[0.15em]"
+                style={{ color: "rgba(253,246,236,0.35)" }}
+              >
+                Together for a Healthier, Happier Community
+              </p>
+            )}
           </div>
 
-          {/* Voucher ID / contactless icon */}
+          {/* Right: name + voucher ID / contactless icon */}
           <div className="text-right shrink-0">
             {voucherId ? (
               <div>
                 {holderName && (
-                  <p className="text-[9px] uppercase tracking-wider mb-0.5" style={{ color: "rgba(212,185,110,0.6)" }}>
+                  <p
+                    className="text-[9px] uppercase tracking-wider mb-1"
+                    style={{ color: "rgba(212,185,110,0.7)", letterSpacing: "0.12em" }}
+                  >
                     {holderName}
                   </p>
                 )}
