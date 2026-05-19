@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Clock, MapPin, Phone } from "lucide-react";
 import SectionDivider from "./ui/SectionDivider";
 
@@ -34,7 +35,8 @@ export default function EventDetails() {
       <BotanicalLeaf side="right" />
 
       <div className="content-max px-6 relative z-10">
-        <div className="text-center mb-10">
+        {/* Heading */}
+        <div className="text-center mb-12">
           <p className="text-[11px] uppercase tracking-[0.2em] text-gold-dark mb-3">
             In-Person Event
           </p>
@@ -47,38 +49,102 @@ export default function EventDetails() {
           </p>
         </div>
 
-        {/* Event rows */}
-        <div className="max-w-md mx-auto flex flex-col gap-5">
-          {events.map((ev, i) => (
-            <div key={i} className="flex items-center gap-5">
-              <div className="event-icon-circle">{ev.icon}</div>
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-text-muted mb-0.5">
-                  {ev.label}
-                </p>
-                {ev.href ? (
-                  <a
-                    href={ev.href}
-                    className="font-cormorant font-bold text-xl text-text-dark hover:text-forest-green transition-colors"
-                  >
-                    {ev.value}
-                  </a>
-                ) : (
-                  <p className="font-cormorant font-bold text-xl text-text-dark">
-                    {ev.value}
-                  </p>
-                )}
-                {ev.sub && (
-                  <p className="text-xs font-semibold mt-0.5" style={{ color: ev.subColor ?? undefined }}>
-                    {ev.sub}
-                  </p>
-                )}
-              </div>
+        {/* 2-column: clinic photo left, event details right */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+
+          {/* Clinic photo */}
+          <div className="relative" style={{ borderRadius: 14, overflow: "hidden" }}>
+            {/* Gold border frame */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: 14,
+                border: "1px solid rgba(197,165,90,0.4)",
+                zIndex: 2,
+                pointerEvents: "none",
+              }}
+            />
+            <Image
+              src="/images/clinic.png"
+              alt="Aries Dental and Aesthetic Clinic — JBR Dubai"
+              width={700}
+              height={467}
+              className="w-full object-cover"
+              style={{
+                borderRadius: 14,
+                display: "block",
+                boxShadow: "0 16px 48px rgba(27,77,62,0.18)",
+              }}
+            />
+            {/* Location caption pill */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: 16,
+                left: 16,
+                background: "rgba(15,58,46,0.88)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(197,165,90,0.35)",
+                borderRadius: 8,
+                padding: "7px 14px",
+                zIndex: 3,
+              }}
+            >
+              <p className="text-[10px] uppercase tracking-[0.18em] text-gold-light font-medium">
+                📍 JBR, Dubai
+              </p>
+              <p className="text-xs text-cream font-cormorant font-semibold">
+                Aries Dental &amp; Aesthetic Clinic
+              </p>
             </div>
-          ))}
+          </div>
+
+          {/* Event details */}
+          <div className="flex flex-col gap-7">
+            {events.map((ev, i) => (
+              <div key={i} className="flex items-center gap-5">
+                <div className="event-icon-circle shrink-0">{ev.icon}</div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-text-muted mb-0.5">
+                    {ev.label}
+                  </p>
+                  {ev.href ? (
+                    <a
+                      href={ev.href}
+                      className="font-cormorant font-bold text-2xl text-text-dark hover:text-forest-green transition-colors"
+                    >
+                      {ev.value}
+                    </a>
+                  ) : (
+                    <p className="font-cormorant font-bold text-2xl text-text-dark">
+                      {ev.value}
+                    </p>
+                  )}
+                  {ev.sub && (
+                    <p
+                      className="text-xs font-semibold mt-0.5"
+                      style={{ color: ev.subColor ?? undefined }}
+                    >
+                      {ev.sub}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {/* CTA */}
+            <a
+              href="tel:+971554560554"
+              className="btn-cta inline-flex w-fit mt-2 text-xs"
+            >
+              RSVP Now — +971 554 560 554
+            </a>
+          </div>
         </div>
 
-        <div className="text-center mt-10">
+        {/* Bottom taglines */}
+        <div className="text-center mt-14">
           <SectionDivider />
           <p className="arabic-text text-base text-text-muted mt-5">
             معاً لمجتمع أكثر صحة وسعادة
