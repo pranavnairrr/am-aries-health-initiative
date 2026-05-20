@@ -90,7 +90,7 @@ export default function Hero() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative z-10 flex flex-col items-center text-center px-6 pt-20 pb-28 lg:pb-32 max-w-3xl mx-auto"
+        className="relative z-10 flex flex-col items-center text-center px-6 pt-10 pb-14 sm:pt-16 sm:pb-24 lg:pb-32 max-w-3xl mx-auto"
       >
         {/* Logo lockup */}
         <motion.div variants={item} className="mb-4">
