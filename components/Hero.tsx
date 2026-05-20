@@ -172,7 +172,7 @@ export default function Hero() {
         {/* CTA */}
         <motion.div variants={item}>
           <LinkButton href="#register" size="lg">
-            Register Now — Claim Your Health Credits
+            Register Now — Claim AED 1,000 Health Credits
           </LinkButton>
         </motion.div>
 
