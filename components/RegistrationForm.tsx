@@ -45,6 +45,7 @@ export default function RegistrationForm() {
         setFormState("success");
       } else if (json.code === "DUPLICATE") {
         setVoucherId(json.voucherId ?? "");
+        setSubmittedName(data.fullName);
         setFormState("duplicate");
       } else if (json.code === "CAP_REACHED") {
         setFormState("cap_reached");
@@ -58,7 +59,14 @@ export default function RegistrationForm() {
 
   function handleWhatsAppShare() {
     const text = encodeURIComponent(
-      `I just claimed my AED 1,000 Health Credits from Aries Dental & AM Health Hub! My voucher ID is ${voucherId}. Register now at ${window.location.href}`
+      `I just claimed my AED 1,000 Health Credits from Aries Dental & AM Health Hub! Register now at ${window.location.href}`
+    );
+    window.open(`https://wa.me/?text=${text}`, "_blank");
+  }
+
+  function handleSharePage() {
+    const text = encodeURIComponent(
+      `Claim your FREE AED 1,000 Health Credits from Aries Dental & AM Health Hub. 2,500 spots available — register here: ${window.location.href}`
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   }
@@ -187,6 +195,20 @@ export default function RegistrationForm() {
                       </Button>
 
                       <SpotCounter className="mt-4 text-center" />
+
+                      {/* Share page with friends */}
+                      <div className="mt-4 pt-4 border-t border-gold-light/30 text-center">
+                        <p className="text-[11px] text-text-muted mb-2">Know someone who'd benefit?</p>
+                        <button
+                          type="button"
+                          onClick={handleSharePage}
+                          className="inline-flex items-center gap-2 text-[11px] font-semibold text-white px-4 py-2"
+                          style={{ background: "#25D366", borderRadius: 4 }}
+                        >
+                          <Share2 size={13} />
+                          Share with Friends on WhatsApp
+                        </button>
+                      </div>
                     </form>
                   )}
                 </motion.div>
@@ -234,7 +256,8 @@ export default function RegistrationForm() {
 
                   {/* Instructions */}
                   <p className="text-xs text-text-body max-w-xs leading-relaxed">
-                    Show this ID at{" "}
+                    Show this ID along with a{" "}
+                    <strong>valid ID</strong> at{" "}
                     <strong>Aries Dental and Aesthetic Clinic</strong> to redeem
                     your AED 1,000 health credits.
                   </p>
@@ -254,9 +277,14 @@ export default function RegistrationForm() {
           </div>
 
           {/* Trust signals */}
-          <p className="text-center text-xs text-text-muted mt-4 tracking-wide">
-            No payment required &nbsp;·&nbsp; Instant confirmation &nbsp;·&nbsp; Redeemable immediately
-          </p>
+          <div className="text-center mt-4 flex flex-col items-center gap-1">
+            <p className="text-xs text-text-muted tracking-wide">
+              No payment required &nbsp;·&nbsp; Instant confirmation &nbsp;·&nbsp; Redeemable immediately
+            </p>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-gold-dark font-medium">
+              For UAE Nationals
+            </p>
+          </div>
         </div>
       </div>
     </section>

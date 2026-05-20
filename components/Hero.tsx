@@ -71,7 +71,7 @@ function LeafOrnament({ flip = false }: { flip?: boolean }) {
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen bg-cream flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen bg-cream flex items-start sm:items-center justify-center overflow-hidden">
       {/* Geometric corner ornaments — desktop only */}
       <div className="hidden lg:block">
         <GeometricCorner position="tl" size={220} />
@@ -177,12 +177,14 @@ export default function Hero() {
         </motion.div>
 
         {/* Social proof line */}
-        <motion.p
-          variants={item}
-          className="mt-5 text-xs text-text-muted tracking-wide"
-        >
-          2,500 community members
-        </motion.p>
+        <motion.div variants={item} className="mt-5 flex flex-col items-center gap-1">
+          <p className="text-xs text-text-muted tracking-wide">
+            2,500 community members
+          </p>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-gold-dark font-medium">
+            For UAE Nationals
+          </p>
+        </motion.div>
       </motion.div>
     </section>
   );

@@ -226,16 +226,12 @@ body {
   width: 100%;
 }
 
-/* ── WhatsApp button — compact on mobile, lifts above sticky CTA bar ── */
-.wa-btn {
+/* ── Floating action buttons — lifts above sticky CTA bar on mobile ── */
+.float-btns {
   bottom: 88px;
-  width: 46px !important;
-  height: 46px !important;
 }
 @media (min-width: 768px) {
-  .wa-btn {
+  .float-btns {
     bottom: 24px;
-    width: 56px !important;
-    height: 56px !important;
   }
 }

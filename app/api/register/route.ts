@@ -34,11 +34,14 @@ export async function POST(req: NextRequest) {
     normalizedPhone = "+971" + normalizedPhone;
   }
 
-  // 3. Check duplicate
+  // 3. Check duplicate — match on phone only, or phone + emirates ID if provided
+  let dupFilter = `phone.eq.${normalizedPhone}`;
+  if (emiratesId) dupFilter += `,emirates_id.eq.${emiratesId}`;
+
   const { data: existing } = await getSupabaseAdmin()
     .from("registrations")
     .select("voucher_id")
-    .or(`email.eq.${email},phone.eq.${normalizedPhone}`)
+    .or(dupFilter)
     .maybeSingle();
 
   if (existing) {

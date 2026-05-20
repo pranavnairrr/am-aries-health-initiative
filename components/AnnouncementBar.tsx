@@ -9,6 +9,14 @@ const instagramIcon = (
   </svg>
 );
 
+const linkedInIcon = (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
 const socials = [
   {
     name: "AM Health Hub — Instagram",
@@ -22,6 +30,12 @@ const socials = [
     label: "Aries",
     icon: instagramIcon,
   },
+  {
+    name: "AM Health Hub — LinkedIn",
+    href: "https://www.linkedin.com/company/a-m-health-hub",
+    label: "LinkedIn",
+    icon: linkedInIcon,
+  },
 ];
 
 export default function AnnouncementBar() {
@@ -30,24 +44,24 @@ export default function AnnouncementBar() {
 
   return (
     <div
-      className="relative z-50 w-full"
+      className="sticky top-0 z-50 w-full"
       style={{
         background: "linear-gradient(90deg, #0F3A2E 0%, #1B4D3E 50%, #0F3A2E 100%)",
         borderBottom: "1px solid rgba(197,165,90,0.3)",
       }}
     >
-      <div className="content-max px-4 py-2.5 flex items-center justify-center gap-3 flex-wrap">
-        {/* Star icon */}
-        <span className="text-gold-primary text-sm shrink-0">✦</span>
+      <div className="content-max px-4 py-1.5 flex items-center justify-center gap-2 flex-wrap">
+        {/* Star icon — desktop only */}
+        <span className="hidden sm:inline text-gold-primary text-xs shrink-0">✦</span>
 
         {/* Text */}
-        <p className="text-cream text-xs tracking-wide text-center">
-          <span className="text-gold-light font-semibold">Follow our social channels</span>
-          <span className="text-cream opacity-80"> — get a chance to win additional Health Credits</span>
+        <p className="text-[11px] tracking-wide text-center leading-none">
+          <span className="text-gold-light font-semibold">Follow us</span>
+          <span className="text-cream opacity-70"> — win extra Health Credits</span>
         </p>
 
         {/* Social icons */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           {socials.map((s) => (
             <a
               key={s.name}
@@ -55,7 +69,7 @@ export default function AnnouncementBar() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={s.name}
-              className="flex items-center gap-1 text-cream opacity-70 hover:opacity-100 hover:text-gold-light transition-all"
+              className="flex items-center gap-1 text-cream opacity-60 hover:opacity-100 hover:text-gold-light transition-all"
             >
               {s.icon}
               {"label" in s && (
@@ -65,7 +79,7 @@ export default function AnnouncementBar() {
           ))}
         </div>
 
-        <span className="text-gold-primary text-sm shrink-0">✦</span>
+        <span className="hidden sm:inline text-gold-primary text-sm shrink-0">✦</span>
       </div>
 
       {/* Close button */}

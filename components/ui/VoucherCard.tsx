@@ -149,42 +149,42 @@ export default function VoucherCard({
         </div>
 
         {/* Bottom row: tagline + voucher ID */}
-        <div className="flex items-end justify-between gap-6">
-          {/* Left: Arabic + English taglines */}
-          <div className="flex-1 min-w-0">
+        <div className="flex items-end justify-between gap-4">
+          {/* Left: Arabic tagline (always) + English (preview only) */}
+          <div className="flex-1 min-w-0 overflow-hidden">
             <p
-              className="arabic-text text-xs mb-1"
+              className="arabic-text text-xs mb-0.5 truncate"
               style={{ color: "rgba(253,246,236,0.6)" }}
             >
               معاً لمجتمع أكثر صحة وسعادة
             </p>
-            {/* Only show English line when no holder name (preview mode) */}
-            {!holderName && (
+            {/* English line only in preview (no voucher yet) */}
+            {!voucherId && (
               <p
-                className="text-[9px] uppercase tracking-[0.15em]"
+                className="text-[8px] uppercase tracking-[0.12em] truncate"
                 style={{ color: "rgba(253,246,236,0.35)" }}
               >
-                Together for a Healthier, Happier Community
+                Together for a Healthier Community
               </p>
             )}
           </div>
 
           {/* Right: name + voucher ID / contactless icon */}
-          <div className="text-right shrink-0">
+          <div className="text-right shrink-0 max-w-[45%]">
             {voucherId ? (
               <div>
                 {holderName && (
                   <p
-                    className="text-[9px] uppercase tracking-wider mb-1"
-                    style={{ color: "rgba(212,185,110,0.7)", letterSpacing: "0.12em" }}
+                    className="text-[8px] uppercase tracking-wider mb-0.5 truncate"
+                    style={{ color: "rgba(212,185,110,0.7)" }}
                   >
                     {holderName}
                   </p>
                 )}
                 <p
-                  className="font-cormorant font-bold tracking-[0.15em]"
+                  className="font-cormorant font-bold tracking-[0.1em] truncate"
                   style={{
-                    fontSize: "1.1rem",
+                    fontSize: "0.88rem",
                     background: "linear-gradient(135deg, #D4B96E 0%, #C5A55A 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",

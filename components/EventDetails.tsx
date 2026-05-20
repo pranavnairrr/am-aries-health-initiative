@@ -1,36 +1,28 @@
 import Image from "next/image";
-import { Clock, MapPin, Phone } from "lucide-react";
+import { MapPin, MessageCircle, Navigation } from "lucide-react";
 import SectionDivider from "./ui/SectionDivider";
 
-const events = [
-  {
-    icon: <Clock size={22} color="#FDF6EC" />,
-    label: "Event Time",
-    value: "Wednesday 7 PM",
-    sub: "Followed by Dinner",
-    subColor: "#E8735A",
-  },
+const MAPS_URL = "https://maps.app.goo.gl/VnzPDHDXJuMd5aam9";
+const WHATSAPP_URL = "https://wa.me/971554560554";
+
+const details = [
   {
     icon: <MapPin size={22} color="#FDF6EC" />,
-    label: "Venue",
-    value: "HT1, Emirates Hills",
-    sub: null,
-    subColor: null,
+    label: "Location",
+    value: "Aries Dental & Aesthetic Clinic",
+    sub: "Amwaj Plaza, The Walk, JBR — Dubai",
   },
   {
-    icon: <Phone size={22} color="#FDF6EC" />,
-    label: "RSVP",
+    icon: <MessageCircle size={22} color="#FDF6EC" />,
+    label: "WhatsApp",
     value: "+971 554 560 554",
-    href: "tel:+971554560554",
-    sub: null,
-    subColor: null,
+    href: WHATSAPP_URL,
   },
 ];
 
 export default function EventDetails() {
   return (
     <section className="bg-cream section-pad relative overflow-hidden">
-      {/* Botanical leaf decorations */}
       <BotanicalLeaf side="left" />
       <BotanicalLeaf side="right" />
 
@@ -38,23 +30,22 @@ export default function EventDetails() {
         {/* Heading */}
         <div className="text-center mb-12">
           <p className="text-[11px] uppercase tracking-[0.2em] text-gold-dark mb-3">
-            In-Person Event
+            Visit Us
           </p>
           <h2 className="font-cormorant font-bold text-4xl md:text-5xl text-text-dark mb-4">
-            Join Us in Person
+            Visit Us in Person
           </h2>
           <SectionDivider />
           <p className="text-sm text-text-muted mt-4">
-            Honoring the Spirit of Inclusion, Unity, and Support
+            To avail your benefit or know more — we&apos;d love to see you
           </p>
         </div>
 
-        {/* 2-column: clinic photo left, event details right */}
+        {/* 2-column: clinic photo left, details right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
           {/* Clinic photo */}
           <div className="relative" style={{ borderRadius: 14, overflow: "hidden" }}>
-            {/* Gold border frame */}
             <div
               style={{
                 position: "absolute",
@@ -77,7 +68,7 @@ export default function EventDetails() {
                 boxShadow: "0 16px 48px rgba(27,77,62,0.18)",
               }}
             />
-            {/* Location caption pill */}
+            {/* Location caption */}
             <div
               style={{
                 position: "absolute",
@@ -100,46 +91,58 @@ export default function EventDetails() {
             </div>
           </div>
 
-          {/* Event details */}
+          {/* Facility details */}
           <div className="flex flex-col gap-7">
-            {events.map((ev, i) => (
-              <div key={i} className="flex items-center gap-5">
-                <div className="event-icon-circle shrink-0">{ev.icon}</div>
+            {details.map((d, i) => (
+              <div key={i} className="flex items-start gap-5">
+                <div className="event-icon-circle shrink-0">{d.icon}</div>
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.18em] text-text-muted mb-0.5">
-                    {ev.label}
+                    {d.label}
                   </p>
-                  {ev.href ? (
+                  {d.href ? (
                     <a
-                      href={ev.href}
+                      href={d.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="font-cormorant font-bold text-2xl text-text-dark hover:text-forest-green transition-colors"
                     >
-                      {ev.value}
+                      {d.value}
                     </a>
                   ) : (
-                    <p className="font-cormorant font-bold text-2xl text-text-dark">
-                      {ev.value}
+                    <p className="font-cormorant font-bold text-2xl text-text-dark leading-tight">
+                      {d.value}
                     </p>
                   )}
-                  {ev.sub && (
-                    <p
-                      className="text-xs font-semibold mt-0.5"
-                      style={{ color: ev.subColor ?? undefined }}
-                    >
-                      {ev.sub}
-                    </p>
+                  {d.sub && (
+                    <p className="text-xs text-text-muted mt-0.5">{d.sub}</p>
                   )}
                 </div>
               </div>
             ))}
 
-            {/* CTA */}
-            <a
-              href="tel:+971554560554"
-              className="btn-cta inline-flex w-fit mt-2 text-xs"
-            >
-              RSVP Now — +971 554 560 554
-            </a>
+            {/* CTA buttons */}
+            <div className="flex flex-wrap gap-3 mt-2">
+              <a
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-cta inline-flex text-xs gap-2"
+              >
+                <Navigation size={14} />
+                Get Directions
+              </a>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-cta inline-flex text-xs gap-2"
+                style={{ background: "#25D366", borderColor: "#25D366" }}
+              >
+                <MessageCircle size={14} />
+                WhatsApp Us
+              </a>
+            </div>
           </div>
         </div>
 
