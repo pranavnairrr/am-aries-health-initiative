@@ -181,7 +181,7 @@ export default function Hero() {
           variants={item}
           className="mt-5 text-xs text-text-muted tracking-wide"
         >
-          2,500 community members &nbsp;·&nbsp; 100% free &nbsp;·&nbsp; No obligations
+          2,500 community members
         </motion.p>
       </motion.div>
     </section>
