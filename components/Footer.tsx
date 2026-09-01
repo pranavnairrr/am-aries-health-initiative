@@ -25,10 +25,10 @@ export default function Footer() {
 
         {/* Contact */}
         <a
-          href="tel:+971554560554"
+          href="tel:+971504288380"
           className="text-sm opacity-70 hover:opacity-100 transition-opacity tracking-wide"
         >
-          +971 554 560 554
+          +971 50 428 8380
         </a>
 
         <div className="w-full h-px bg-cream opacity-10" />

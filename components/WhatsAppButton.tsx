@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const WHATSAPP_NUMBER = "971554560554";
+const WHATSAPP_NUMBER = "971504288380";
 const WHATSAPP_MESSAGE = encodeURIComponent(
   "Hi! I'd like to learn more about the AED 2.5 Million Community Health Initiative."
 );

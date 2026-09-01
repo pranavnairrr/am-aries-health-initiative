@@ -3,7 +3,7 @@ import { MapPin, MessageCircle, Navigation } from "lucide-react";
 import SectionDivider from "./ui/SectionDivider";
 
 const MAPS_URL = "https://maps.app.goo.gl/VnzPDHDXJuMd5aam9";
-const WHATSAPP_URL = "https://wa.me/971554560554";
+const WHATSAPP_URL = "https://wa.me/971504288380";
 
 const details = [
   {
@@ -15,7 +15,7 @@ const details = [
   {
     icon: <MessageCircle size={22} color="#FDF6EC" />,
     label: "WhatsApp",
-    value: "+971 554 560 554",
+    value: "+971 50 428 8380",
     href: WHATSAPP_URL,
   },
 ];

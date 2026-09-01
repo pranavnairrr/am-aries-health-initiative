@@ -1,9 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { registrationSchema } from "@/lib/validations";
-import { getSupabaseAdmin } from "@/lib/supabase-server";
 import { generateVoucherId } from "@/lib/generateVoucherId";
+import { pushToCrm } from "@/lib/pushToCrm";
 
 export const dynamic = "force-dynamic";
+
+// Every voucher issued by this campaign is worth the same fixed amount.
+const VOUCHER_AMOUNT = 1000;
+const VOUCHER_CURRENCY = "AED";
+
+// Google Ads ValueTrack attribution params the client may attach to the registration payload.
+// All optional — pulled straight through to the CRM webhook.
+const TRACKING_KEYS = [
+  "landing_page", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+  "device", "creative", "adgroup", "placement", "target", "targetid", "adposition",
+  "network", "matchtype", "loc_physical_ms", "loc_interest_ms", "utm_country",
+  "gclid", "gad_source", "gad_campaignid",
+] as const;
+
+function extractTracking(body: Record<string, unknown>) {
+  const out: Record<string, string | undefined> = {};
+  for (const key of TRACKING_KEYS) {
+    const value = body[key];
+    if (typeof value === "string" && value) out[key] = value;
+  }
+  return out;
+}
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -34,58 +56,31 @@ export async function POST(req: NextRequest) {
     normalizedPhone = "+971" + normalizedPhone;
   }
 
-  // 3. Check duplicate — match on phone only, or phone + emirates ID if provided
-  let dupFilter = `phone.eq.${normalizedPhone}`;
-  if (emiratesId) dupFilter += `,emirates_id.eq.${emiratesId}`;
+  // 3. Issue the voucher and push the lead straight to the CRM — the CRM is
+  // the sole system of record now, so its response drives the outcome.
+  const voucherId = generateVoucherId();
 
-  const { data: existing } = await getSupabaseAdmin()
-    .from("registrations")
-    .select("voucher_id")
-    .or(dupFilter)
-    .maybeSingle();
+  const crmResult = await pushToCrm({
+    first_name: fullName,
+    phone: normalizedPhone,
+    email,
+    primary_condition: "1000 Aries Dental Voucher",
+    country: "United Arab Emirates",
+    preferred_language: preferredLanguage,
+    emirates_id: emiratesId || undefined,
+    voucher_id: voucherId,
+    voucher_amount: VOUCHER_AMOUNT,
+    voucher_currency: VOUCHER_CURRENCY,
+    ...extractTracking(body as Record<string, unknown>),
+  });
 
-  if (existing) {
-    return NextResponse.json({
-      success: false,
-      code: "DUPLICATE",
-      voucherId: existing.voucher_id,
-    });
+  if (!crmResult.ok) {
+    return NextResponse.json({ success: false, code: "CRM_ERROR" }, { status: 502 });
   }
 
-  // 4. Generate unique voucher ID — retry up to 5 times on collision (astronomically rare)
-  let voucherId = "";
-  for (let attempt = 0; attempt < 5; attempt++) {
-    voucherId = generateVoucherId();
-
-    const { error: insertError } = await getSupabaseAdmin()
-      .from("registrations")
-      .insert({
-        voucher_id: voucherId,
-        full_name: fullName,
-        email,
-        phone: normalizedPhone,
-        emirates_id: emiratesId || null,
-        preferred_language: preferredLanguage,
-        registered_at: new Date().toISOString(),
-      });
-
-    if (!insertError) {
-      return NextResponse.json({ success: true, voucherId });
-    }
-
-    // 23505 = unique_violation — either voucher_id collision or duplicate email/phone
-    if (insertError.code === "23505") {
-      // If it's email/phone duplicate (race condition), return DUPLICATE
-      const isVoucherCollision = insertError.message?.includes("voucher_id");
-      if (!isVoucherCollision) {
-        return NextResponse.json({ success: false, code: "DUPLICATE" });
-      }
-      // Otherwise retry with a new voucher ID
-      continue;
-    }
-
-    return NextResponse.json({ success: false, code: "DB_ERROR" }, { status: 500 });
+  if (crmResult.duplicate) {
+    return NextResponse.json({ success: false, code: "DUPLICATE" });
   }
 
-  return NextResponse.json({ success: false, code: "DB_ERROR" }, { status: 500 });
+  return NextResponse.json({ success: true, voucherId });
 }

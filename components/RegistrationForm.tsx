@@ -12,7 +12,40 @@ import VoucherCard from "./ui/VoucherCard";
 import SpotCounter from "./ui/SpotCounter";
 import SectionDivider from "./ui/SectionDivider";
 
-type FormState = "idle" | "submitting" | "success" | "duplicate" | "cap_reached" | "error";
+type FormState = "idle" | "submitting" | "success" | "duplicate" | "error";
+
+// Pulls Google Ads ValueTrack attribution params off the current URL, if present.
+// Everything here is optional — the registration still works with none of it.
+function getTrackingParams() {
+  if (typeof window === "undefined") return {};
+  const qs = new URLSearchParams(window.location.search);
+  const pick = (...keys: string[]) =>
+    keys.map((k) => qs.get(k)).find((v) => v) || undefined;
+
+  return {
+    landing_page: window.location.href,
+    utm_source: pick("utm_source", "source"),
+    utm_medium: pick("utm_medium", "medium"),
+    utm_campaign: pick("utm_campaign", "campaign"),
+    utm_term: pick("term", "utm_term"),
+    utm_content: pick("utm_content"),
+    device: pick("device"),
+    creative: pick("creative"),
+    adgroup: pick("adgroup"),
+    placement: pick("placement"),
+    target: pick("target"),
+    targetid: pick("targetid"),
+    adposition: pick("adposition"),
+    network: pick("network"),
+    matchtype: pick("matchtype"),
+    loc_physical_ms: pick("loc_physical_ms"),
+    loc_interest_ms: pick("loc_interest_ms"),
+    utm_country: pick("utm_country"),
+    gclid: pick("gclid"),
+    gad_source: pick("gad_source"),
+    gad_campaignid: pick("gad_campaignid"),
+  };
+}
 
 export default function RegistrationForm() {
   const [formState, setFormState] = useState<FormState>("idle");
@@ -35,7 +68,7 @@ export default function RegistrationForm() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, ...getTrackingParams() }),
       });
       const json = await res.json();
 
@@ -44,11 +77,8 @@ export default function RegistrationForm() {
         setSubmittedName(data.fullName);
         setFormState("success");
       } else if (json.code === "DUPLICATE") {
-        setVoucherId(json.voucherId ?? "");
         setSubmittedName(data.fullName);
         setFormState("duplicate");
-      } else if (json.code === "CAP_REACHED") {
-        setFormState("cap_reached");
       } else {
         setFormState("error");
       }
@@ -120,17 +150,7 @@ export default function RegistrationForm() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {formState === "cap_reached" ? (
-                    <div className="text-center py-8">
-                      <p className="font-cormorant font-bold text-2xl text-text-dark mb-3">
-                        All Spots Claimed
-                      </p>
-                      <p className="text-sm text-text-body">
-                        All 2,500 health credit spots have been claimed. Follow us for future initiatives.
-                      </p>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
                       {formState === "error" && (
                         <div className="bg-red-50 border border-coral text-coral text-xs p-3 mb-4">
                           Something went wrong. Please try again.
@@ -210,7 +230,6 @@ export default function RegistrationForm() {
                         </button>
                       </div>
                     </form>
-                  )}
                 </motion.div>
               )}
 
@@ -234,33 +253,37 @@ export default function RegistrationForm() {
                     </h3>
                     <p className="text-sm text-text-muted">
                       {formState === "duplicate"
-                        ? "You've already registered. Here's your existing voucher:"
+                        ? "We already have your details on file — our team will be in touch."
                         : "Your Health Credit has been reserved. Your voucher ID:"}
                     </p>
                   </div>
 
-                  {/* Voucher ID display */}
-                  {voucherId && (
-                    <div className="font-cormorant font-bold text-4xl gold-gradient-text tracking-widest">
-                      {voucherId}
-                    </div>
+                  {formState !== "duplicate" && (
+                    <>
+                      {/* Voucher ID display */}
+                      {voucherId && (
+                        <div className="font-cormorant font-bold text-4xl gold-gradient-text tracking-widest">
+                          {voucherId}
+                        </div>
+                      )}
+
+                      {/* Voucher card */}
+                      <div className="w-full max-w-xs">
+                        <VoucherCard
+                          voucherId={voucherId}
+                          holderName={submittedName}
+                        />
+                      </div>
+
+                      {/* Instructions */}
+                      <p className="text-xs text-text-body max-w-xs leading-relaxed">
+                        Show this ID along with a{" "}
+                        <strong>valid ID</strong> at{" "}
+                        <strong>Aries Dental and Aesthetic Clinic</strong> to redeem
+                        your AED 1,000 health credits.
+                      </p>
+                    </>
                   )}
-
-                  {/* Voucher card */}
-                  <div className="w-full max-w-xs">
-                    <VoucherCard
-                      voucherId={voucherId}
-                      holderName={submittedName}
-                    />
-                  </div>
-
-                  {/* Instructions */}
-                  <p className="text-xs text-text-body max-w-xs leading-relaxed">
-                    Show this ID along with a{" "}
-                    <strong>valid ID</strong> at{" "}
-                    <strong>Aries Dental and Aesthetic Clinic</strong> to redeem
-                    your AED 1,000 health credits.
-                  </p>
 
                   {/* WhatsApp share */}
                   <button
