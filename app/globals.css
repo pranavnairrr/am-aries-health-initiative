@@ -131,6 +131,47 @@ body {
   color: #7A7A7A;
 }
 
+/* ── Phone input (react-phone-number-input) ── */
+.phone-input-field {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1.5px solid #D4B96E;
+  border-radius: 6px;
+  background: #FFFFFF;
+  padding: 0 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.phone-input-field:focus-within {
+  border-color: #1B4D3E;
+  box-shadow: 0 0 0 3px rgba(27, 77, 62, 0.1);
+}
+.phone-input-field.input-error {
+  border-color: #E8735A;
+}
+.phone-input-field .PhoneInputInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 13px 0;
+  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
+  font-size: 0.925rem;
+  color: #1A1A1A;
+}
+.phone-input-field .PhoneInputInput::placeholder {
+  color: #7A7A7A;
+}
+.phone-input-field .PhoneInputCountry {
+  margin-right: 10px;
+  padding-right: 10px;
+  border-right: 1.5px solid #D4B96E;
+}
+.phone-input-field .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon {
+  outline: 2px solid #1B4D3E;
+  outline-offset: 2px;
+}
+
 /* ── Arabic RTL ── */
 .arabic-text {
   font-family: var(--font-noto-arabic), "Noto Sans Arabic", sans-serif;

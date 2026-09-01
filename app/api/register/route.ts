@@ -46,15 +46,13 @@ export async function POST(req: NextRequest) {
 
   const { fullName, email, phone, emiratesId, preferredLanguage } = parsed.data;
 
-  // 2. Normalize phone
-  let normalizedPhone = phone.trim();
-  if (normalizedPhone.startsWith("00971")) {
-    normalizedPhone = "+971" + normalizedPhone.slice(5);
-  } else if (normalizedPhone.startsWith("0")) {
-    normalizedPhone = "+971" + normalizedPhone.slice(1);
-  } else if (!normalizedPhone.startsWith("+971")) {
-    normalizedPhone = "+971" + normalizedPhone;
-  }
+  // 2. Phone arrives already in E.164 format (e.g. +14155552671) from the
+  // international phone picker. The client also resolves the ISO country
+  // from it (via the same phone picker's own parsing) and sends it along —
+  // parsing it again here would need libphonenumber-js in the server bundle,
+  // which Turbopack currently fails to bundle for this route.
+  const rawBody = body as Record<string, unknown>;
+  const country = typeof rawBody.country === "string" ? rawBody.country : "";
 
   // 3. Issue the voucher and push the lead straight to the CRM — the CRM is
   // the sole system of record now, so its response drives the outcome.
@@ -62,10 +60,10 @@ export async function POST(req: NextRequest) {
 
   const crmResult = await pushToCrm({
     first_name: fullName,
-    phone: normalizedPhone,
+    phone,
     email,
     primary_condition: "1000 Aries Dental Voucher",
-    country: "United Arab Emirates",
+    country,
     preferred_language: preferredLanguage,
     emirates_id: emiratesId || undefined,
     voucher_id: voucherId,

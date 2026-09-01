@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Share2 } from "lucide-react";
+import PhoneInput, { parsePhoneNumber, isValidPhoneNumber } from "react-phone-number-input";
+import type { Country } from "react-phone-number-input";
 import { registrationSchema, type RegistrationInput } from "@/lib/validations";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
 import VoucherCard from "./ui/VoucherCard";
 import SpotCounter from "./ui/SpotCounter";
 import SectionDivider from "./ui/SectionDivider";
+import "react-phone-number-input/style.css";
+
+const DEFAULT_COUNTRY: Country = "AE";
 
 type FormState = "idle" | "submitting" | "success" | "duplicate" | "error";
 
@@ -51,10 +56,13 @@ export default function RegistrationForm() {
   const [formState, setFormState] = useState<FormState>("idle");
   const [voucherId, setVoucherId] = useState("");
   const [submittedName, setSubmittedName] = useState("");
+  const [defaultCountry, setDefaultCountry] = useState<Country>(DEFAULT_COUNTRY);
 
   const {
     register,
     handleSubmit,
+    control,
+    setError,
     formState: { errors },
   } = useForm<RegistrationInput>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,13 +70,30 @@ export default function RegistrationForm() {
     defaultValues: { preferredLanguage: "en" },
   });
 
+  // Auto-detect the visitor's country (via Vercel's geo header) to default
+  // the phone country picker — falls back to AE if unavailable (e.g. localhost).
+  useEffect(() => {
+    fetch("/api/geo")
+      .then((res) => res.json())
+      .then((data: { country?: string }) => {
+        if (data.country) setDefaultCountry(data.country as Country);
+      })
+      .catch(() => {});
+  }, []);
+
   async function onSubmit(data: RegistrationInput) {
+    if (!isValidPhoneNumber(data.phone)) {
+      setError("phone", { message: "Enter a valid phone number" });
+      return;
+    }
+
     setFormState("submitting");
     try {
+      const country = parsePhoneNumber(data.phone)?.country;
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, ...getTrackingParams() }),
+        body: JSON.stringify({ ...data, country, ...getTrackingParams() }),
       });
       const json = await res.json();
 
@@ -174,15 +199,35 @@ export default function RegistrationForm() {
                         {...register("email")}
                       />
 
-                      <Input
-                        label="Phone Number"
-                        type="tel"
-                        placeholder="501234567"
-                        prefix="+971"
-                        error={errors.phone?.message}
-                        required
-                        {...register("phone")}
-                      />
+                      <div className="flex flex-col gap-1.5 mb-4">
+                        <label
+                          htmlFor="phone-number"
+                          className="text-xs font-medium uppercase tracking-widest text-forest-green"
+                        >
+                          Phone Number
+                          <span className="text-coral ml-1">*</span>
+                        </label>
+                        <Controller
+                          name="phone"
+                          control={control}
+                          render={({ field }) => (
+                            <PhoneInput
+                              id="phone-number"
+                              className={`phone-input-field ${errors.phone ? "input-error" : ""}`}
+                              placeholder="Enter phone number"
+                              defaultCountry={defaultCountry}
+                              international
+                              countryCallingCodeEditable={false}
+                              value={field.value}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                            />
+                          )}
+                        />
+                        {errors.phone && (
+                          <p className="text-xs text-coral mt-0.5">{errors.phone.message}</p>
+                        )}
+                      </div>
 
                       <Input
                         label="Emirates ID (Optional)"
@@ -303,9 +348,6 @@ export default function RegistrationForm() {
           <div className="text-center mt-4 flex flex-col items-center gap-1">
             <p className="text-xs text-text-muted tracking-wide">
               No payment required &nbsp;·&nbsp; Instant confirmation &nbsp;·&nbsp; Redeemable immediately
-            </p>
-            <p className="text-[11px] uppercase tracking-[0.18em] text-gold-dark font-medium">
-              For UAE Nationals
             </p>
           </div>
         </div>

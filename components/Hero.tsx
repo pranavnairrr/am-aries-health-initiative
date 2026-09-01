@@ -181,9 +181,6 @@ export default function Hero() {
           <p className="text-xs text-text-muted tracking-wide">
             2,500 community members
           </p>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-gold-dark font-medium">
-            For UAE Nationals
-          </p>
         </motion.div>
       </motion.div>
     </section>
